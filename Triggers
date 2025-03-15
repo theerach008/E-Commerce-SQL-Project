@@ -1,0 +1,18 @@
+DELIMITER //
+CREATE TRIGGER reduce_stock_on_order
+BEFORE INSERT ON orders
+FOR EACH ROW
+BEGIN
+    DECLARE current_stock INT;
+    SELECT stock INTO current_stock FROM products WHERE product_id = NEW.product_id;
+
+    IF current_stock < NEW.product_count THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Not enough stock available for this product';
+    ELSE
+        UPDATE products 
+        SET stock = stock - NEW.product_count
+        WHERE product_id = NEW.product_id;
+    END IF;
+END //
+DELIMITER ;
