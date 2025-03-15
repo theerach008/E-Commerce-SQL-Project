@@ -1,0 +1,12 @@
+DELIMITER //
+CREATE PROCEDURE users_details (IN users_cat VARCHAR(50), IN users_ID INT)
+BEGIN
+    IF users_cat = 'customer' THEN
+        SELECT * FROM users WHERE user_id = users_ID;
+    ELSEIF users_cat = 'seller' THEN
+        SELECT * FROM users WHERE user_id = users_ID;
+    ELSE 
+        SELECT 'Role you mentioned was not in table, retry' AS message;
+    END IF;
+END //
+DELIMITER ;
